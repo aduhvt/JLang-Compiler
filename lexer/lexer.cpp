@@ -57,8 +57,7 @@ void lexer::tokenize(vector<string>& lines){
                 tokens.push_back({TokenType::NUMBER, word, i});
             }
             else {
-                cout << "ERROR : Syntax error at line " << i;
-                break;
+                throw runtime_error("LEXER ERROR : unexpected character at line : " + to_string(i + 1));
             }
         }
     }
