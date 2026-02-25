@@ -3,15 +3,16 @@
 #include <string>
 #include <vector>
 #include "lexer/lexer.h"
+#include "parser/parser.h"
 using namespace std;
 
 vector<string> readfile(){
     ifstream in;
-    // in.open("test/source_code.txt");
-    string source_code;
-    cout << "Enter Source Code Path :" << endl;
-    getline(cin, source_code);
-    in.open(source_code);
+    in.open("test/source_code.txt");
+    // string source_code;
+    // cout << "Enter Source Code Path :" << endl;
+    // getline(cin, source_code);
+    // in.open(source_code);
 
     vector<string> lines;
     string line;
@@ -33,7 +34,11 @@ int main(){
         lexer l;
         l.tokenize(lines);
         vector<Token> tokens = l.getTokens();   
-        lexerTest(tokens);
+
+        parser p;
+        p.ast(tokens);
+
+        cout << "success";
 
     } catch (const exception& e) {
         cerr << e.what();
