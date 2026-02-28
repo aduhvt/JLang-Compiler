@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <memory>
 #include "lexer/lexer.h"
 #include "parser/parser.h"
 using namespace std;
@@ -35,8 +36,9 @@ int main(){
         l.tokenize(lines);
         vector<Token> tokens = l.getTokens();   
 
-        parser p;
-        p.ast(tokens);
+        Parser p(tokens);
+        unique_ptr<Stmt> AST = p.ast();
+        AST->print();
 
         cout << "success";
 
