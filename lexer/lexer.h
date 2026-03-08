@@ -13,6 +13,8 @@
         KW_ELSE,
         KW_LOOP,
         KW_BREAK,
+        KW_TRUE,
+        KW_FALSE,
 
         // Identifier & Number
         IDENTIFIER,

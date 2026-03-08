@@ -1,7 +1,7 @@
-main: main.o lexer/lexer.o parser/parser.o
-	g++ main.o lexer/lexer.o parser/parser.o -o main
+main: main.o lexer/lexer.o parser/parser.o semantic/semantic.o
+	g++ main.o lexer/lexer.o parser/parser.o semantic/semantic.o -o main
 
-main.o: main.cpp lexer/lexer.h parser/parser.h
+main.o: main.cpp lexer/lexer.h parser/parser.h semantic/semantic.h
 	g++ -c main.cpp
 
 lexer/lexer.o: lexer/lexer.cpp lexer/lexer.h
@@ -10,5 +10,8 @@ lexer/lexer.o: lexer/lexer.cpp lexer/lexer.h
 parser/parser.o: parser/parser.cpp parser/parser.h
 	g++ -c parser/parser.cpp -o  parser/parser.o
 
+semantic/semantic.o : semantic/semantic.cpp semantic/semantic.h
+	g++ -c semantic/semantic.cpp -o semantic/semantic.o
+
 clean: 
-	del main.exe main.o lexer\lexer.o parser\parser.o
+	del main.exe main.o lexer\lexer.o parser\parser.o semantic\semantic.o

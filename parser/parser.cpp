@@ -215,6 +215,10 @@ unique_ptr<Expr> Parser::unary(){
 unique_ptr<Expr> Parser::primary(){
     if(match(TokenType::NUMBER)) return make_unique<LiteralExpr>(previous().lexeme);
 
+    if(match(TokenType::KW_TRUE)) return make_unique<LiteralExpr>("true");
+
+    if(match(TokenType::KW_FALSE)) return make_unique<LiteralExpr>("false");
+
     if(match(TokenType::IDENTIFIER)) return make_unique<VariableExpr>(previous().lexeme);
 
     if(match(TokenType::LEFT_PAREN)){

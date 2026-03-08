@@ -30,7 +30,7 @@ void lexer::tokenize(vector<string>& lines){
             else if(line[j] == '=') tokens.push_back({TokenType::EQUAL, "=", i});
             else if(isalpha(line[j])){
                 string word = "";
-                while(isalnum(line[j]) || line[j] == '_'){
+                while(j < line.size() && (isalnum(line[j]) || line[j] == '_')){
                     word += line[j];
                     j++;
                 }
@@ -43,10 +43,12 @@ void lexer::tokenize(vector<string>& lines){
                 else if(word == "else") t = TokenType::KW_ELSE;
                 else if(word == "loop") t = TokenType::KW_LOOP;
                 else if(word == "break") t = TokenType::KW_BREAK;
+                else if(word == "true") t = TokenType::KW_TRUE;
+                else if(word == "false") t = TokenType::KW_FALSE;
                 else t = TokenType::IDENTIFIER;
                 tokens.push_back({t, word, i});
             }
-            else if(isdigit(line[j])){
+            else if(j < line.size() && isdigit(line[j])){
                 string word = "";
                 while(isdigit(line[j])){
                     word += line[j];

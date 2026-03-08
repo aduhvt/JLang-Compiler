@@ -5,6 +5,7 @@
 #include <memory>
 #include "lexer/lexer.h"
 #include "parser/parser.h"
+#include "semantic/semantic.h"
 using namespace std;
 
 vector<string> readfile(){
@@ -39,6 +40,9 @@ int main(){
         Parser p(tokens);
         unique_ptr<Stmt> AST = p.ast();
         AST->print();
+
+        Semantic s;
+        s.analyzeStmt(AST.get());
 
         cout << "success";
 
