@@ -36,7 +36,7 @@ Token& Parser::consume(TokenType expected, string msg){
 }
 
 string Parser::errorMsg(string msg){
-    return "Syntax Error : at line " + to_string(peek().line) +  " :: " + msg;
+    return "Syntax Error : at line " + to_string(peek().line + 1) +  " :: " + msg;
 }
 
 // -------------------------------------------------
@@ -143,15 +143,33 @@ unique_ptr<Stmt> Parser::ifelseSt(){
 
 // -------------------------------------------------
 // Expressions 
-// expression -> equality (== or !=)
+// expression -> assignment ( = ) 
+// assignment -> equality (== or !=)
 // equality -> comparison (< or >)
 // comparison -> term (+ -)
 // term -> factor (* /)
 // factor -> unary (- !)
-// unary -> primary (IDENTIFIER | NUMBER | EXPRESION)
+// unary -> primary (IDENTIFIER | NUMBER | TRUE | FALSE | EXPRESION)
 
 unique_ptr<Expr> Parser::expression(){
-    return equality();
+    return assignment();
+}
+
+unique_ptr<Expr> Parser::assignment(){
+    unique_ptr<Expr> left = equality();
+
+    if(match(TokenType::EQUAL)){
+        unique_ptr<Expr> right = assignment();
+
+        if(auto var = dynamic_cast<VariableExpr*>(left.get())){
+            string name = var->value;
+            return make_unique<AssignExpr>(name, move(right));
+        }
+
+        throw runtime_error(errorMsg("Invalid Assignment"));
+    }
+
+    return left;
 }
 
 unique_ptr<Expr> Parser::equality(){
@@ -268,12 +286,19 @@ void BinaryExpr::print(int indent) const {
     right->print(indent+2);
 }
 
+void AssignExpr::print(int indent) const {
+    cout << string(indent, ' ') << "Assign Ex : " << endl;
+    cout << string(indent + 2, ' ') << "var : " << name << endl;
+    cout << string (indent + 2, ' ') << "value : " << endl;
+    expression->print(indent + 4);
+}
+
 void BreakStmt::print(int indent) const {
-    cout << string(indent, ' ') << "Break St" << endl;
+    cout << string(indent, ' ') << "Break St." << endl;
 }
 
 void ExprStmt::print(int indent) const {
-    cout << string(indent, ' ') << "Expr St" << endl;
+    cout << string(indent, ' ') << "Expr St : " << endl;
     expression->print(indent+2);
 }
 

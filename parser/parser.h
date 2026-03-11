@@ -120,6 +120,16 @@ struct UnaryExpr : Expr{
     void print(int indent) const override;
 };
 
+struct AssignExpr : Expr{
+    std::string name;
+    std::unique_ptr<Expr> expression;
+    
+    AssignExpr(std::string n, std::unique_ptr<Expr> e) 
+    : name(n), expression(std::move(e)){}
+
+    void print(int indent) const override;
+};
+
 // ---------------------------------------
 
 class Parser{
@@ -150,6 +160,7 @@ class Parser{
         std::unique_ptr<Stmt> varDecSt();
         
         std::unique_ptr<Expr> expression();
+        std::unique_ptr<Expr> assignment();
         std::unique_ptr<Expr> equality();
         std::unique_ptr<Expr> comparison();
         std::unique_ptr<Expr> term();

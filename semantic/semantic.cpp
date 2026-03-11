@@ -40,17 +40,17 @@ void Semantic::analyzeStmt(Stmt* st){
         exitBlock();
     }
     else if (auto brk = dynamic_cast<BreakStmt*>(st)){
-        if(loopDepth == 0) throw runtime_error("Semantic Error");
+        if(loopDepth == 0) throw runtime_error("Semantic Error : Using Break Outside the loop");
     }
     else if(auto ifSt = dynamic_cast<IfStmt*>(st)){
         if(!checkType(TokenType::KW_BOOL, analyzeExpr(ifSt->condition.get())))
-            throw runtime_error("Semantic Error");
+            throw runtime_error("Semantic Error : Invalid Expression");
         analyzeStmt(ifSt->thenBranch.get());
         if(ifSt->elseBranch.get()) analyzeStmt(ifSt->elseBranch.get());
     }
     else if(auto loop = dynamic_cast<LoopStmt*>(st)){
         if(!checkType(TokenType::KW_BOOL, analyzeExpr(loop->condition.get())))
-            throw runtime_error("Semantic Error");
+            throw runtime_error("Semantic Error : Invalid Expression");
         enterLoop();
         analyzeStmt(loop->body.get());
         exitLoop();
@@ -65,7 +65,7 @@ void Semantic::analyzeStmt(Stmt* st){
         newVar(vr->name, vr->type);
         if(vr->initializer){
             if(!checkType(vr->type, analyzeExpr(vr->initializer.get())))
-                throw runtime_error("Semantic Error");
+                throw runtime_error("Semantic Error : Type Mismatch");
         }
     }
     else throw runtime_error("Semantic Error");
@@ -88,12 +88,12 @@ TokenType Semantic::analyzeExpr(Expr* ex){
         
         if(expr->ops == TokenType::LESS || expr->ops == TokenType::GREATER){
             if(left != TokenType::KW_INT || right != TokenType::KW_INT)
-                throw runtime_error("Semantic Error");
+                throw runtime_error("Semantic Error : Invalid Expression");
             return TokenType::KW_BOOL;
         }
         else if(expr->ops == TokenType::EQUAL_EQUAL || expr->ops == TokenType::BANG_EQUAL ){
             if(left != right)
-                throw runtime_error("Semantic Error");
+                throw runtime_error("Semantic Error : Type Mismatch + Invalid Expression");
             return TokenType::KW_BOOL;
         }
         else if( expr->ops == TokenType::PLUS ||
@@ -102,7 +102,7 @@ TokenType Semantic::analyzeExpr(Expr* ex){
                 expr->ops == TokenType::SLASH )
         {
             if(left != TokenType::KW_INT || right != TokenType::KW_INT)
-                throw runtime_error("Semantic Error");
+                throw runtime_error("Semantic Error : Invalid Expression");
             return TokenType::KW_INT;
         }
         else throw runtime_error("Semantic Error");
@@ -111,10 +111,17 @@ TokenType Semantic::analyzeExpr(Expr* ex){
         TokenType t = analyzeExpr(expr->value.get());
         if(expr->ops == TokenType::MINUS){
             if(t != TokenType::KW_INT)
-                throw runtime_error("Semantic Error");
+                throw runtime_error("Semantic Error : Invalid Unary Expression");
             return TokenType::KW_INT;
         }
-        throw runtime_error("Semantic Error");
+        throw runtime_error("Semantic Error : Invalid Unary Expression");
+    }
+    else if (auto expr = dynamic_cast<AssignExpr*>(ex)){
+        TokenType varT = getType(expr->name);
+        TokenType valT = analyzeExpr(expr->expression.get());
+
+        if(varT != valT) throw runtime_error("Semantic Error : Type Mismatch");
+        return varT;
     }
     else throw runtime_error("Semantic Error");
 }
