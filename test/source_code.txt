@@ -1,8 +1,38 @@
 {
-    int x = -10 + (1 + 3 * 7);
-    int b = 9;
+    num x = 5;
+    num y = 10;
+    fact flag = true;
+
+    print(x);
+    print(y);
+
     x = x + 2;
-    if(x < 10){
-        print(b - (1 + x));
+    y = y - 3;
+
+    print(x + y);
+
+    if(flag == true){
+        print(100);
     }
-}             
+    else{
+        print(200);
+    }
+
+    {
+        num temp = 3;
+        print(temp * 2);
+    }
+
+    loop(x > 0){
+        print(x);
+
+        if(x == 3){
+            print(999);
+            brk;
+        }
+
+        x = x - 1;
+    }
+
+    print(x);
+}

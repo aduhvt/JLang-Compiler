@@ -6,15 +6,17 @@
 #include "lexer/lexer.h"
 #include "parser/parser.h"
 #include "semantic/semantic.h"
+#include "interpreter/interpreter.h"
 using namespace std;
 
 vector<string> readfile(){
     ifstream in;
-    in.open("test/source_code.txt");
-    // string source_code;
-    // cout << "Enter Source Code Path :" << endl;
-    // getline(cin, source_code);
-    // in.open(source_code);
+    // in.open("test/source_code.txt");
+    string source_code;
+    cout << "Enter Source Code Path :" << endl;
+    getline(cin, source_code);
+    in.open(source_code);
+    cout << endl;
 
     vector<string> lines;
     string line;
@@ -39,12 +41,16 @@ int main(){
 
         Parser p(tokens);
         unique_ptr<Stmt> AST = p.ast();
-        AST->print();
+        // AST->print(0);
 
         Semantic s;
         s.analyzeStmt(AST.get());
 
-        cout << "success";
+        Interpreter i;
+        i.run(AST.get());
+
+        cout << endl;
+        cout << "Code Successsfully Executed";
 
     } catch (const exception& e) {
         cerr << e.what();

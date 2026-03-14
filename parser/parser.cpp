@@ -73,6 +73,10 @@ unique_ptr<Stmt> Parser::statement(){
     else if(check(TokenType::KW_LOOP)) return loopSt();
     else if(check(TokenType::KW_IF)) return ifelseSt();
     else if(check(TokenType::KW_INT) || check(TokenType::KW_BOOL)) return varDecSt();
+    else if(match(TokenType::KW_BREAK)){
+        consume(TokenType::SEMICOLON, "Expected ';' after break");
+        return make_unique<BreakStmt>();
+    }
     else return expressionSt();
 }
 
@@ -90,9 +94,7 @@ unique_ptr<Stmt> Parser::printSt(){
     return st;
 }
 
-unique_ptr<Stmt> Parser::expressionSt(){
-    cout << "Expression St" << endl;
-    
+unique_ptr<Stmt> Parser::expressionSt(){    
     unique_ptr<Expr> expr = expression();
     consume(TokenType::SEMICOLON, "Expected ';' after expression");
 

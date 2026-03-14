@@ -36,13 +36,13 @@ void lexer::tokenize(vector<string>& lines){
                 }
                 j--;
                 TokenType t;
-                if(word == "int") t = TokenType::KW_INT;
-                else if(word == "bool") t = TokenType::KW_BOOL;
+                if(word == "num") t = TokenType::KW_INT;
+                else if(word == "fact") t = TokenType::KW_BOOL;
                 else if(word == "print") t = TokenType::KW_PRINT;
                 else if(word == "if") t = TokenType::KW_IF;
                 else if(word == "else") t = TokenType::KW_ELSE;
                 else if(word == "loop") t = TokenType::KW_LOOP;
-                else if(word == "break") t = TokenType::KW_BREAK;
+                else if(word == "brk") t = TokenType::KW_BREAK;
                 else if(word == "true") t = TokenType::KW_TRUE;
                 else if(word == "false") t = TokenType::KW_FALSE;
                 else t = TokenType::IDENTIFIER;
